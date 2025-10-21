@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.spring.member.model.dto.MemberDTO;
@@ -105,52 +106,54 @@ public class MemberController {
 	}
 	>> 1. 과 2. 둘다 안씀
 	*/
-	@Autowired // 3. ★권장 방법★
+	@Autowired // 3. ★권장 방법★ : 생성자 주입
 	public MemberController(MemberService memberService) {
 		this.memberService = memberService;
 	}
-	
-//	@RequestMapping("/login")
-//	public String login(/*@ModelAttribute*/ MemberDTO member,
-//											HttpSession session,
-//											Model model) {
-//		//System.out.println("로그인 시 입력한 정보 : " + member);
-//		
-//		
-//		//log.info("Member객체 필드값 확인 ~ {}", member);
-//		
-//		MemberDTO loginMember =  memberService.login(member);
-//	}
-		/*
+/*	
+	@RequestMapping("/login")
+	public String login(/*@ModelAttribute// MemberDTO member,
+											HttpSession session,
+											Model model) {
+		//System.out.println("로그인 시 입력한 정보 : " + member);
+		
+		
+		//log.info("Member객체 필드값 확인 ~ {}", member);
+		
+		MemberDTO loginMember =  memberService.login(member);
+	}
+		
 		if(loginMember != null) {
 			log.info("성공");
 		} else {
 			log.info("실패");
 		}
-		*/
+*/
 		
 		
 		// 첫번쨰 방법
-//		if(loginMember != null) { // 로그인에 성공
-//
-//			session.setAttribute("loginMember", loginMember);
-//			// forwarding 보단 redirect
-//			// localhost // 악용
-//			
-//			return "rediirect:/";
-//		} else {
-//			// error_page => 포워딩
-//			// requestScope에 msg라는 키값으로 로그인 실패 <=>
-//			// Spring에서는 model 타입 이용해서 RequestScopeㅇ 에 값을 담음
-//			model.addAttribute("msg", "로그인 실패");
-//			
-//			//forwarding
-//			// /WEB-INF/views/
-//			// .jps
-//			
-//		}
-//		
-//		return "include/error_page";
+	/*
+		if(loginMember != null) { // 로그인에 성공
+
+			session.setAttribute("loginMember", loginMember);
+			// forwarding 보단 redirect
+			// localhost // 악용
+			
+			return "rediirect:/";
+		} else {
+			// error_page => 포워딩
+			// requestScope에 msg라는 키값으로 로그인 실패 <=>
+			// Spring에서는 model 타입 이용해서 RequestScopeㅇ 에 값을 담음
+			model.addAttribute("msg", "로그인 실패");
+			
+			//forwarding
+			// /WEB-INF/views/
+			// .jps
+			
+		}
+		
+		return "include/error_page";
+		*/
 		
 		// 두 번째 방법: 반환타입 ModelAndView타입 반환
 		@PostMapping("/login")
@@ -196,9 +199,56 @@ public class MemberController {
 			return "redirect:join";
 		}
 		
+		// 마이페이지
+		@GetMapping("mypage")
+		public String myPage() {
+			
+			return "member/my_page";
+		}
 		
+		@PostMapping("edit")
+		public String edit(MemberDTO member, HttpSession session) {
+			/*
+			 * 1_1) 404 : mapping값 확인하기
+			 * org.springframework.web.servlet.PageNotFound
+			 * 
+			 * 1_2) 405 : method(GET/POST) 잘못 적었을 떄
+			 * 
+			 * 1_3) 필드에 값이 잘 들어왔나 = key값 확인
+			 */
+			log.info("값 찍어보기: {}", member);
+			
+			/*
+			 * 2. SQL문
+			 * UPDATE => MEMBER => PK?
+			 * ID PWD NAME EMAIL ENROLLDATE
+			 * 
+			 * 2_1) 매개변수 MemberDTO타입의 memberId필드값 조건
+			 * UPDATE MEMBER SET USER_NAME = 입력한 값, EMAIL = 입력한 값
+			 * WHERE USER_ID = 넘어온 아이디
+			 */
+			
+			/*
+			 * Best Practice
+			 * 
+			 * 컨트롤러에서 세션관리를 담당
+			 * 서비스에선 순수 비즈니스 로직만 구현
+			 * 서비스에서 HttpSession이 필요하다면 인자로 전달
+			 */
+			
+			memberService.update(member, session);
+			
+			return "redirect:mypage";
+		}
 		
-		
+		@PostMapping("delete")
+		public String delete(@RequestParam(value ="userPwd") String userPwd,
+															  HttpSession session) {
+			
+			memberService.delete(userPwd, session);
+			session.removeAttribute("loginMember");
+			return "redirect:delete";
+		}
 		
 		
 		

@@ -175,6 +175,25 @@
 			<version>1.18.30</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<!-- 3. 비밀번호 암호화 -->
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-core</artifactId>
+		    <version>5.5.2</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-web</artifactId>
+		    <version>5.5.2</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-config</artifactId>
+		    <version>5.5.2</version>
+		</dependency>
 
 	</dependencies>
 	<build>

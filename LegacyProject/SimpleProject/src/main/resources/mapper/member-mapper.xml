@@ -15,7 +15,25 @@
 		       MEMBER
 		 WHERE
 		       USER_ID = #{userId}
+		<!-- 
 		  AND
-		       USER_PWD = #{userPwd}                	
+		       USER_PWD = #{userPwd}        
+		       : DB는 암호문이라 사용 불가능        	
+		 -->
 	</select>
+	
+	<insert id="signup"
+			parameterType="com.kh.spring.member.model.dto.MemberDTO">
+		INSERT
+		  INTO
+		  		MEMBER
+		VALUES
+		 		(
+		 		#{userId},
+		 		#{userPwd},
+		 		#{userName},
+		 		#{email},
+		 		SYSDATE
+		 		)
+	</insert>
 </mapper>
