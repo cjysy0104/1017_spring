@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.spring.board.model.dto.BoardDTO;
+import com.kh.spring.board.model.dto.ReplyDTO;
 import com.kh.spring.board.model.mapper.BoardMapper;
 import com.kh.spring.exception.AuthenticationException;
 import com.kh.spring.exception.InvalidArgumentsException;
@@ -142,13 +143,33 @@ public class BoardServiceImpl implements BoardService {
 			throw new InvalidArgumentsException("잘못된 요청입니다.");
 		}
 		
-		BoardDTO board = boardMapper.findByBoardNo(boardNo);
+		BoardDTO board = boardMapper.findBoardAndReply(boardNo);
 		
 		if(board == null) {
 			throw new InvalidArgumentsException("삭제된 게시글입니다.");
 		}
 		
 		return board;
+	}
+
+	@Override
+	public int insertReply(ReplyDTO reply, HttpSession session) {
+		
+		MemberDTO loginMember = ((MemberDTO)session.getAttribute("loginMember"));
+		
+		if(loginMember == null) {
+			throw new AuthenticationException("?");
+		}
+	
+		Long boardNo = reply.getRefBno();
+		BoardDTO board = boardMapper.findByBoardNo(boardNo);
+		if(board == null) {
+			throw new InvalidArgumentsException("게시글 번호 이상");
+		}
+		
+		reply.setReplyWriter(loginMember.getUserId());
+		return boardMapper.insertReply(reply);
+		
 	}
 
 	

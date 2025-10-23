@@ -37,32 +37,41 @@
             <h2>게시글 상세보기</h2>
             <br>
 
-            <a class="btn btn-secondary" style="float:right;" href="">목록으로</a>
+            <a class="btn btn-secondary" style="float:right;" href="boards?page=1">목록으로</a>
             <br><br>
 
-            <table id="contentArea" algin="center" class="table">
+            <table id="contentArea" align="center" class="table">
                 <tr>
                     <th width="100">제목</th>
-                    <td colspan="3">제목입니다요</td>
+                    <td colspan="3">${ board.boardTitle }</td>
                 </tr>
                 <tr>
                     <th>작성자</th>
-                    <td>admin</td>
+                    <td>${ board.boardWriter }</td>
                     <th>작성일</th>
-                    <td>2025-09-07</td>
+                    <td>${ board.createDate }</td>
                 </tr>
                 <tr>
                     <th>첨부파일</th>
+                    <c:choose>
+                    <c:when test="${ not empty board.changeName }">
                     <td colspan="3">
-                        <a href="" download="">파일명.jpg</a>
+                        <a href="${ board.changeName }" download>${ board.originName }</a>
                     </td>
+                    </c:when>
+                    <c:otherwise>
+                    <td colspan="3">
+                       첨부파일이 존재하지 않습니다.
+                    </td>
+                    </c:otherwise>
+                	</c:choose>
                 </tr>
                 <tr>
                     <th>내용</th>
                     <td colspan="3"></td>
                 </tr>
                 <tr>
-                    <td colspan="4"><p style="height:150px;">게시판 내용이 들어갈 자리!!</p></td>
+                    <td colspan="4"><p style="height:150px;">${ board.boardContent }</p></td>
                 </tr>
             </table>
             <br>
@@ -87,21 +96,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th>user02</th>
-                        <td>ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ</td>
-                        <td>2025-09-12</td>
+                
+                	<c:choose>
+                	<c:when test="${ not empty board.replies }">
+                	<c:forEach items="${ board.replies }" var="reply">
+	                	<tr>
+	                        <th>${ reply.replyWriter }</th>
+	                        <td>${ reply.replyContent }</td>
+	                        <td>${ reply.createDate }</td>
+	                    </tr>
+                	</c:forEach>
+                	</c:when>
+                	<c:otherwise>
+                		<tr>
+                        <td>댓글이 존재하지않습니다.</td>
                     </tr>
-                    <tr>
-                        <th>user01</th>
-                        <td>재밌어요</td>
-                        <td>2025-09-11</td>
-                    </tr>
-                    <tr>
-                        <th>admin</th>
-                        <td>댓글입니다!!</td>
-                        <td>2025-09-10</td>
-                    </tr>
+                	</c:otherwise>
+                	</c:choose>
+                    
                 </tbody>
             </table>
         </div>

@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.spring.board.model.dto.BoardDTO;
+import com.kh.spring.board.model.dto.ReplyDTO;
 
 @Mapper
 public interface BoardMapper {
@@ -19,5 +20,9 @@ public interface BoardMapper {
 	int increaseCount(Long boardNo);
 
 	BoardDTO findByBoardNo(Long boardNo);
+	
+	BoardDTO findBoardAndReply(Long boardNo);
+	
+	int insertReply(ReplyDTO reply);
 
 }

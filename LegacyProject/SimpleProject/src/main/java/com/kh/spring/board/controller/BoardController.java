@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -68,7 +69,7 @@ public class BoardController {
 		return "redirect:boards";
 	}
 	
-	@GetMapping("/{id}")
+	@GetMapping("boards/{id}")
 	public String toDetail(@PathVariable(name="id") Long boardNo,
 													Model model) {
 		log.info("{}", boardNo);
@@ -78,7 +79,7 @@ public class BoardController {
 		// 만약에 없는 게시글 번호라면 예외 발생
 		BoardDTO board = boardService.findByBoardNo(boardNo);
 		model.addAttribute("board", board);
-		return "board/detail";
+		return "boards/detail";
 	}
 	
 	
